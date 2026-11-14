@@ -73,7 +73,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R14.20_
 
-- [ ] 1.2 Configure Tailwind and shadcn/ui
+- [x] 1.2 Configure Tailwind and shadcn/ui
   - Objective: Add Tailwind and initialize shadcn/ui. Add only the primitives used in later tasks: Button, Dialog, Sheet, Popover, Input, Select, Switch, Toast.
   - Files: `tailwind.config.ts`, `postcss.config.js`, `src/styles/globals.css`, `components.json`, `src/components/ui/*`
   - Done when: a Button renders with Tailwind classes, and the build includes no unused shadcn components.
