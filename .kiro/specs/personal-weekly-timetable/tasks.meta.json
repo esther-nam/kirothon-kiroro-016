@@ -94,6 +94,664 @@
         "chatSessionId": "sess_987fcb92-6578-4794-a8ff-1bbe9a0fbe15",
         "timestamp": 1794644594460
       }
+    ],
+    "1.7 Define data types and the repository contract": [
+      {
+        "executionId": "e1ea8a35-afa1-41c5-8985-b3de938edd0d",
+        "chatSessionId": "sess_33ad0382-0d0a-4b94-8e3d-2806105b2718",
+        "timestamp": 1794644632747
+      },
+      {
+        "executionId": "e1ea8a35-afa1-41c5-8985-b3de938edd0d",
+        "chatSessionId": "sess_33ad0382-0d0a-4b94-8e3d-2806105b2718",
+        "timestamp": 1794644711198
+      }
+    ],
+    "1.8 Build the mock repository (read paths and preferences)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644720884
+      },
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644728751
+      },
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644876593
+      }
+    ],
+    "1.9 Build mock friend and tag directories": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644720925
+      },
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644883393
+      },
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644970458
+      }
+    ],
+    "1.10 Implement locale-aware time formatting and messages": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644720956
+      },
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644973699
+      },
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794645039260
+      }
+    ],
+    "1.11 Build the app shell and AppHeader": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644720991
+      }
+    ],
+    "2.1 Implement zone conversion and the DST resolver": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721033
+      }
+    ],
+    "2.2 Implement week range and navigation logic": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721067
+      }
+    ],
+    "2.3 Implement the week header text": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721099
+      }
+    ],
+    "2.4 Implement effective preferences": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721135
+      }
+    ],
+    "2.5 Create the timetable UI store": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721176
+      }
+    ],
+    "2.6 Build CalendarHeader with navigation": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721207
+      }
+    ],
+    "2.7 Build the grid frame: WeeklyCalendar, DayHeader, TimeGutter, DayColumn": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721233
+      }
+    ],
+    "2.8 Implement the week data hook (one-time events)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721264
+      }
+    ],
+    "2.9 Implement day split, geometry and clipping": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721292
+      }
+    ],
+    "2.10 Implement the overlap layout": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721330
+      }
+    ],
+    "2.11 Implement density tiers and hit-testing": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721359
+      }
+    ],
+    "2.12 Build EventBlock": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721391
+      }
+    ],
+    "2.13 Build OverflowIndicator and OutsideHoursIndicator": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721418
+      }
+    ],
+    "2.14 Render events in the calendar": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721449
+      }
+    ],
+    "2.15 Build TimezoneSelect": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721476
+      }
+    ],
+    "2.16 Build TimetableSettings (local)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721510
+      }
+    ],
+    "2.17 Implement the responsive layout": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721543
+      }
+    ],
+    "2.18 Measure a rendering baseline": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721575
+      }
+    ],
+    "3.1 Implement event input validation": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721610
+      }
+    ],
+    "3.2 Implement the form model and Repeat toggle logic": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721643
+      }
+    ],
+    "3.3 Build ConfirmDialog": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721676
+      }
+    ],
+    "3.4 Build the EventEditorModal shell": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721709
+      }
+    ],
+    "3.5 Build EventTimeSlotInput": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721742
+      }
+    ],
+    "3.6 Build TagSelector": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721773
+      }
+    ],
+    "3.7 Add the event timezone field to the editor": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721801
+      }
+    ],
+    "3.8 Build RecurrenceSettings": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721832
+      }
+    ],
+    "3.9 Build ParticipantSelector (UI only)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721859
+      }
+    ],
+    "4.1 Add writes to the mock repository": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721890
+      }
+    ],
+    "4.2 Implement mutation hooks": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721917
+      }
+    ],
+    "4.3 Implement click-to-create": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721950
+      }
+    ],
+    "4.4 Build the selection store and TimeRangeSelection": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644721977
+      }
+    ],
+    "4.5 Implement drag-to-select (mouse and pen)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722007
+      }
+    ],
+    "4.6 Implement touch long-press selection": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722033
+      }
+    ],
+    "4.7 Implement keyboard navigation of the grid": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722065
+      }
+    ],
+    "4.8 Implement event selection": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722092
+      }
+    ],
+    "4.9 Wire the create flow": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722134
+      }
+    ],
+    "4.10 Wire the edit flow for one-time events": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722180
+      }
+    ],
+    "4.11 Implement delete and undo": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722208
+      }
+    ],
+    "4.12 Implement empty, loading and error states": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722242
+      }
+    ],
+    "5.1 Set up local Supabase": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722273
+      }
+    ],
+    "5.2 Spike: share `src/domain` with the Edge Function": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722300
+      }
+    ],
+    "5.3 Add the profiles table or stub": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722332
+      }
+    ],
+    "5.4 Migrate timetable preferences": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722359
+      }
+    ],
+    "5.5 Migrate events, segments and slots": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722390
+      }
+    ],
+    "5.6 Migrate participants, tag assignments and change records, with RLS": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722419
+      }
+    ],
+    "5.7 Write the database write functions (one-time events)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722451
+      }
+    ],
+    "5.8 Write the read function for the visible week (one-time events)": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722494
+      }
+    ],
+    "5.9 Build the `timetable` Edge Function": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722540
+      }
+    ],
+    "5.10 Implement SupabaseRepository": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722574
+      }
+    ],
+    "5.11 Wire authentication into the app": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722609
+      }
+    ],
+    "5.12 Persist preferences in Supabase": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722643
+      }
+    ],
+    "5.13 Choose the repository by environment": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722676
+      }
+    ],
+    "6.1 Add the series end-time rule to the resolver": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722707
+      }
+    ],
+    "6.2 Implement series expansion": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722735
+      }
+    ],
+    "6.3 Apply recurrence exceptions": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722767
+      }
+    ],
+    "6.4 Implement scope operations and previews": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722799
+      }
+    ],
+    "6.5 Support series in the mock repository": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722825
+      }
+    ],
+    "6.6 Migrate recurrence rules and exceptions": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722857
+      }
+    ],
+    "6.7 Extend the write functions for series and scopes": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722889
+      }
+    ],
+    "6.8 Extend reads and the Edge Function for series": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722923
+      }
+    ],
+    "6.9 Enable recurrence in the editor": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722950
+      }
+    ],
+    "6.10 Finish event-timezone editing": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644722982
+      }
+    ],
+    "6.11 Add timezone and DST end-to-end tests": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723008
+      }
+    ],
+    "7.1 Define the integration boundaries": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723041
+      }
+    ],
+    "7.2 Implement participant and invitation rules in the domain and mock": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723068
+      }
+    ],
+    "7.3 Implement participant writes and invitation functions in the database": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723099
+      }
+    ],
+    "7.4 Complete the RLS authorization matrix": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723133
+      }
+    ],
+    "7.5 Enable participants in the editor": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723159
+      }
+    ],
+    "7.6 Build the read-only view for participants": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723190
+      }
+    ],
+    "7.7 Emit change records": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723221
+      }
+    ],
+    "7.8 Connect the Friend Management feature": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723260
+      }
+    ],
+    "7.9 Display team references": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723310
+      }
+    ],
+    "7.10 Disable undo for shared events": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723340
+      }
+    ],
+    "7.11 Provide busy intervals": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723366
+      }
+    ],
+    "8.1 Add a requirement traceability check": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723398
+      }
+    ],
+    "8.2 Complete domain unit coverage": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723425
+      }
+    ],
+    "8.3 Complete component tests": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723457
+      }
+    ],
+    "8.4 Run integration tests in CI": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723484
+      }
+    ],
+    "8.5 Complete the Playwright end-to-end suite": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723515
+      }
+    ],
+    "8.6 Verify accessibility": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723543
+      }
+    ],
+    "8.7 Verify responsive layouts": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723575
+      }
+    ],
+    "8.8 Validate performance targets": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723608
+      }
+    ],
+    "8.9 Sweep the edge cases": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723643
+      }
+    ],
+    "8.10 Final check against Figma and requirements": [
+      {
+        "executionId": "bfe7b44f-d24d-4363-9a2c-2b290f6a7abb",
+        "chatSessionId": "sess_98434b2a-5094-4503-8023-8bc7228c40e7",
+        "timestamp": 1794644723677
+      }
     ]
   }
 }
