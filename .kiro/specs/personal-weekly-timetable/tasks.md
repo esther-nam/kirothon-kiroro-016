@@ -109,7 +109,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R5.4, R5.6, R21.8_
 
-- [ ] 1.6 Implement civil-date utilities and the clock
+- [x] 1.6 Implement civil-date utilities and the clock
   - Objective: Create the zone-free date helpers that every calendar calculation uses (design D-14, 3.1).
   - Files: `src/domain/time/types.ts`, `src/domain/time/local-date.ts`, `src/domain/time/clock.ts`
   - Done when: `LocalDate` parsing and validation, `addDays`, `weekdayOf` (Monday = 1), `mondayOf`, `addWeeks` and `addMonthsClamped` exist. An injectable `Clock` exists. No function uses `Date` local-time methods.
