@@ -82,7 +82,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: none directly (stack from `tech.md`)_
 
-- [ ] 1.3 Add runtime dependencies
+- [x] 1.3 Add runtime dependencies
   - Objective: Install `luxon` (with `@types/luxon`), `@tanstack/react-query`, `react-hook-form`, `zod`, `zustand`, and dev-only `@axe-core/playwright`. Nothing else.
   - Files: `package.json`, lockfile
   - Done when: versions are pinned at the latest stable release checked at install time. `npm ls` shows no peer-dependency warnings. A short note in `README.md` lists each dependency and why (design D-2, D-3).
