@@ -212,6 +212,8 @@ export interface PreferencesRow {
   timeZone: string | null
   timeFormat: '12h' | '24h' | null
   intervalMinutes: 15 | 30 | 60 | null
-  visibleStartHour: number | null
-  visibleEndHour: number | null
+  /** 'HH:mm', whole minutes (R13.6). Only sets the first-render scroll (R3.10). */
+  wakeUpTime: string | null
+  /** 'HH:mm'. Stored only (R13.19). */
+  bedtime: string | null
 }

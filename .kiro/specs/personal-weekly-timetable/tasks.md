@@ -169,7 +169,7 @@ Rules for every task:
 
 ## Milestone 2 — Weekly Calendar
 
-- [-] 2.1 Implement zone conversion and the DST resolver
+- [x] 2.1 Implement zone conversion and the DST resolver
   - Objective: The single function that turns a local date and minute in a zone into an instant, and the reverse (design 3.2, 3.3). The calendar needs it for week boundaries, so it comes before recurrence.
   - Files: `src/domain/time/zone.ts`, `src/domain/time/resolve-local.ts`
   - Done when: `toLocal(instant, zone)` and `resolveLocal(date, minute, zone, context)` exist. Normal, repeated-hour (earlier instant) and gap cases are detected. A one-time gap returns `nonexistent`. A series gap returns the first valid time after the gap. Minute 1440 means 00:00 of the next date.
@@ -178,7 +178,7 @@ Rules for every task:
   - Status: `Decision` (series gap policy is provisional OQ-36a)
   - _Requirements: R7.13, R7.14, R14.12, R14.13, R14.14, R14.16_
 
-- [~] 2.2 Implement week range and navigation logic
+- [x] 2.2 Implement week range and navigation logic
   - Objective: Week boundaries, "today", the current-week test and navigation limits (design 3.4).
   - Files: `src/domain/time/week.ts`
   - Done when: `weekRange(monday, zone)` uses local calendar days, never +168 hours. `todayIn(zone, clock)`, `isCurrentWeek` and `canNavigate(monday, direction)` exist, with limits at 1900-01-01 and 2200-12-31.
@@ -187,7 +187,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.2, R2.1, R2.2, R2.3, R2.5, R2.9, R14.9, R14.10_
 
-- [~] 2.3 Implement the week header text
+- [x] 2.3 Implement the week header text
   - Objective: `formatWeekHeader(monday, locale)` (design 3.10).
   - Files: `src/domain/format/week-header.ts`
   - Done when: the output uses `Intl` parts. Separator styling follows the Figma audit.
@@ -196,7 +196,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.3, R1.4, R1.5, R1.6, R1.7, R1.10_
 
-- [~] 2.4 Implement effective preferences
+- [x] 2.4 Implement effective preferences
   - Objective: Merge stored preferences with defaults and resolve the display timezone (design 7.3).
   - Files: `src/domain/preferences/effective.ts`, `src/features/timetable/hooks/usePreferences.ts`
   - Done when: defaults are 24-hour, 15 minutes, 08:00 to 22:00. Timezone resolves as saved (if valid), else browser (if valid), else `UTC`. A changed browser timezone never overwrites the saved one. An invalid field falls back to its default only.
@@ -205,7 +205,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R3.1, R13.12, R13.14, R14.17, R14.18, R14.19_
 
-- [~] 2.5 Create the timetable UI store
+- [x] 2.5 Create the timetable UI store
   - Objective: Zustand store for the visible Monday, the selected occurrence key and which modal is open (design 7.3).
   - Files: `src/features/timetable/store/ui-store.ts`
   - Done when: the visible Monday is a `LocalDate`. It starts at the current week and resets to it on reload. A display timezone change does not change it.
@@ -214,7 +214,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.2, R2.7, R14.5_
 
-- [~] 2.6 Build CalendarHeader with navigation
+- [-] 2.6 Build CalendarHeader with navigation
   - Objective: Header text and previous, next and Today controls.
   - Files: `src/features/timetable/components/calendar/CalendarHeader.tsx`
   - Done when: it matches Figma. There is no date picker. Today is inactive on the current week. Controls at a navigation limit are inactive with an explanation. The header text is announced through a polite live region.

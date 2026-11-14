@@ -159,8 +159,8 @@ describe('preferences', () => {
         timeZone: null,
         timeFormat: '12h',
         intervalMinutes: 30,
-        visibleStartHour: null,
-        visibleEndHour: null,
+        wakeUpTime: null,
+        bedtime: null,
       },
     })
   })
@@ -174,7 +174,7 @@ describe('preferences', () => {
 
   it('[R18.2] resetPreferences clears every field', async () => {
     const { repo } = setup()
-    await repo.patchPreferences({ timeFormat: '24h', visibleStartHour: 6 })
+    await repo.patchPreferences({ timeFormat: '24h', wakeUpTime: '06:00' })
     const reset = await repo.resetPreferences()
     expect(reset.ok && Object.values(reset.value).every((v) => v === null)).toBe(true)
   })

@@ -7,6 +7,10 @@ export const en = {
     previousWeek: 'Previous week',
     nextWeek: 'Next week',
     weekHeaderLabel: 'Week',
+    overline: 'Personal timetable',
+    todayInactive: 'You are already viewing the current week.',
+    previousLimit: 'The earliest week that can be shown has been reached.',
+    nextLimit: 'The latest week that can be shown has been reached.',
   },
   event: {
     untitled: 'Untitled event',

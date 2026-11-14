@@ -92,8 +92,8 @@ export class MockRepository implements TimetableRepository {
         timeZone: null,
         timeFormat: null,
         intervalMinutes: null,
-        visibleStartHour: null,
-        visibleEndHour: null,
+        wakeUpTime: null,
+        bedtime: null,
       }),
     )
   }

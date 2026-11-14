@@ -47,8 +47,8 @@ export const EMPTY_PREFERENCES: PreferencesRow = {
   timeZone: null,
   timeFormat: null,
   intervalMinutes: null,
-  visibleStartHour: null,
-  visibleEndHour: null,
+  wakeUpTime: null,
+  bedtime: null,
 }
 
 /** In-memory rows. All reads go through a viewer id, so one user never sees another's data. */

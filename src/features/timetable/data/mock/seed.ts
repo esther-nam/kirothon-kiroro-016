@@ -117,7 +117,7 @@ export function createSeedData(clock: Clock, zone = 'UTC'): MockStoreData {
       tagId: TAG_STUDY,
       slots: [0, 2, 4].map((offset) => ({ date: day(offset), start: hm(18), end: hm(19, 30) })),
     }),
-    // Outside default visible hours (08:00 to 22:00).
+    // Early and late events: the grid always shows the full 24 hours (R3.16).
     one('ev-early-run', 'Early run', 4, hm(6), hm(7, 30), TAG_GYM),
     one('ev-late-reading', 'Late reading', 4, hm(21, 30), hm(23), TAG_PERSONAL),
     // Near 00:00 and 24:00.
