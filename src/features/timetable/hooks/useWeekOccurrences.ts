@@ -45,7 +45,10 @@ function raceAbort<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
  * Loads the events of the visible week by range only (R18.11) and returns its occurrences.
  * One-time events only for now (task 2.8).
  */
-export function useWeekOccurrences(visibleMonday: LocalDate, displayZone: string): UseWeekOccurrencesResult {
+export function useWeekOccurrences(
+  visibleMonday: LocalDate,
+  displayZone: string,
+): UseWeekOccurrencesResult {
   const repository = useRepository()
   const window = useMemo(() => weekRange(visibleMonday, displayZone), [visibleMonday, displayZone])
 

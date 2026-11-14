@@ -232,7 +232,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.1, R1.8, R2.8, R3.2, R3.7, R3.8, R3.9, R3.10_
 
-- [-] 2.8 Implement the week data hook (one-time events)
+- [x] 2.8 Implement the week data hook (one-time events)
   - Objective: `useWeekOccurrences` loads bundles for the visible window and returns one-time occurrences.
   - Files: `src/features/timetable/hooks/useWeekOccurrences.ts`, `src/domain/recurrence/expand.ts` (one-time branch only)
   - Done when: each one-time slot yields exactly one occurrence. The query key is the UTC window, so a timezone change refetches. Requests for weeks the user has left are cancelled, and only the last requested week's data is shown. Data is requested by range only.
@@ -241,7 +241,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R2.6, R8.3, R14.2, R14.5, R18.11_
 
-- [~] 2.9 Implement day split, geometry and clipping
+- [x] 2.9 Implement day split, geometry and clipping
   - Objective: Pure functions that place occurrence segments in day columns (design 3.6).
   - Files: `src/domain/layout/day-split.ts`, `src/domain/layout/geometry.ts`
   - Done when: segments use wall-clock minutes of the display timezone, keep the occurrence key and the full original time label, are clipped to the visible range, and report outside-hours flags.
@@ -250,7 +250,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R3.3, R3.4, R3.5, R3.6, R3.11, R3.12, R3.14, R5.15, R14.10_
 
-- [~] 2.10 Implement the overlap layout
+- [x] 2.10 Implement the overlap layout
   - Objective: `layoutDay` clustering, columns, width limit and overflow (design 3.8).
   - Files: `src/domain/layout/overlap.ts`
   - Done when: touching events do not overlap. Ordering is start, then longer first, then key. Clusters wider than the column allows end in an overflow entry with the correct N.
@@ -259,7 +259,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R4.1, R4.2, R4.3, R4.4, R4.5, R4.6, R4.8, R4.9, R4.12_
 
-- [~] 2.11 Implement density tiers and hit-testing
+- [x] 2.11 Implement density tiers and hit-testing
   - Objective: `densityFor` and `hitTest` (design 3.9).
   - Files: `src/domain/layout/density.ts`, `src/domain/layout/hit-test.ts`
   - Done when: thresholds come from the layout constants. The drawn rectangle always wins over an expanded touch area.
@@ -268,7 +268,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R5.9, R5.11, R5.12, R6.9_
 
-- [~] 2.12 Build EventBlock
+- [x] 2.12 Build EventBlock
   - Objective: The block component with density tiers and Default, Hover and Selected states (design 7.2).
   - Files: `src/features/timetable/components/calendar/EventBlock.tsx`
   - Done when: it matches Figma. The background is monochrome and only the circular indicator uses the tag color. There is no indicator without a tag, and no team line without a team (even with participants). Text never overflows, and long titles truncate. States differ by more than color. The accessible name has the title, tag name, day, times and team. Titles render as plain text. The block is memoized.
@@ -277,7 +277,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R5.1, R5.2, R5.3, R5.4, R5.5, R5.6, R5.7, R5.8, R5.10, R5.13, R5.14, R21.3, R21.4, R21.8_
 
-- [~] 2.13 Build OverflowIndicator and OutsideHoursIndicator
+- [x] 2.13 Build OverflowIndicator and OutsideHoursIndicator
   - Objective: The `+N more` control with its list, and the edge markers for clipped events.
   - Files: `src/features/timetable/components/calendar/OverflowIndicator.tsx`, `OutsideHoursIndicator.tsx`
   - Done when: `+N more` opens a list of the hidden events that works by pointer, touch and keyboard, and every listed event is selectable. Edge markers have accessible names.
@@ -286,7 +286,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R3.12, R3.13, R4.6, R4.7, R21.9_
 
-- [~] 2.14 Render events in the calendar
+- [x] 2.14 Render events in the calendar
   - Objective: Connect the data hook, split, layout and components so the grid shows events.
   - Files: `WeeklyCalendar.tsx`, `DayColumn.tsx`, `src/features/timetable/hooks/useDayLayouts.ts`
   - Done when: seeded events render at exact positions, overlaps sit side by side or in overflow, and layout recomputes when data or settings change. Changing the display timezone keeps the same dates in view and moves events. Changing back restores the original rendering.
@@ -295,7 +295,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R3.3, R4.3, R4.10, R4.11, R14.2, R14.3, R14.4, R14.5_
 
-- [~] 2.15 Build TimezoneSelect
+- [-] 2.15 Build TimezoneSelect
   - Objective: A searchable IANA timezone picker that shows the zone name (used in settings and the editor).
   - Files: `src/features/timetable/components/shared/TimezoneSelect.tsx`, `src/domain/time/zone-list.ts`
   - Done when: it lists IANA identifiers only and rejects any other value. It is keyboard operable and can be disabled.

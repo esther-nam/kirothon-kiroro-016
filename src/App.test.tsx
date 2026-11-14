@@ -9,7 +9,11 @@ function Probe() {
 
 describe('App', () => {
   it('[R14.20] renders the heading and header buttons', () => {
-    render(<App />)
+    render(
+      <AppProviders>
+        <App />
+      </AppProviders>,
+    )
     expect(screen.getByRole('heading', { name: 'Personal Weekly Timetable' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Add event' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Settings' })).toBeInTheDocument()

@@ -1,18 +1,24 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { DEFAULT_LOCALE } from '@/domain/format/time'
 import { systemClock, type Clock } from '@/domain/time/clock'
 import { addDays } from '@/domain/time/local-date'
 import { canNavigate, isCurrentWeek, todayIn } from '@/domain/time/week'
 import { useTimetableUiStore } from '../../store/ui-store'
 import { usePreferences } from '../../hooks/usePreferences'
+import { useDayLayouts } from '../../hooks/useDayLayouts'
+import { useWeekOccurrences } from '../../hooks/useWeekOccurrences'
 import {
   MOBILE_COLUMN_WIDTH_PX,
   MOBILE_GUTTER_WIDTH_PX,
   PX_PER_MINUTE,
 } from '../../constants/layout'
 import { CalendarHeader } from './CalendarHeader'
+import { densityFor } from '@/domain/layout/density'
+import { segmentGeometry } from '@/domain/layout/geometry'
 import { DayColumn } from './DayColumn'
 import { DayHeader } from './DayHeader'
+import { EventBlock } from './EventBlock'
+import { OverflowIndicator } from './OverflowIndicator'
 import { TimeGutter } from './TimeGutter'
 import { initialScrollTop } from './grid-geometry'
 export interface WeeklyCalendarProps {
@@ -20,6 +26,24 @@ export interface WeeklyCalendarProps {
   clock?: Clock
 }
 const DAY_OFFSETS = [0, 1, 2, 3, 4, 5, 6] as const
+/** Width of one day column. Falls back to the minimum column width where nothing is measured (jsdom). */
+function useColumnWidth(scrollRef: RefObject<HTMLDivElement | null>): number {
+  const [width, setWidth] = useState(MOBILE_COLUMN_WIDTH_PX)
+  useLayoutEffect(() => {
+    const el = scrollRef.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const measure = () => {
+      const column = el.querySelector<HTMLElement>('[data-slot="day-column"]')
+      const measured = column?.getBoundingClientRect().width ?? 0
+      if (measured > 0) setWidth(Math.round(measured))
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [scrollRef])
+  return width
+}
 /**
  * The grid frame: toolbar, sticky day headers, sticky time gutter and seven
  * day columns, Monday to Sunday (R1.1). The grid always spans 00:00 to 24:00 (R3.16).
@@ -49,7 +73,19 @@ export function WeeklyCalendar({
     el.scrollTop = initialScrollTop(wakeUpTime, PX_PER_MINUTE, el.scrollHeight, el.clientHeight)
   }, [ready, wakeUpTime])
   const today = todayIn(timeZone, clock)
-  const dates = DAY_OFFSETS.map((offset) => addDays(monday, offset))
+  const dates = useMemo(() => DAY_OFFSETS.map((offset) => addDays(monday, offset)), [monday])
+  const selectedKey = useTimetableUiStore((s) => s.selectedOccurrenceKey)
+  const selectOccurrence = useTimetableUiStore((s) => s.selectOccurrence)
+  const { occurrences } = useWeekOccurrences(monday, timeZone)
+  const columnWidthPx = useColumnWidth(scrollRef)
+  const layouts = useDayLayouts({
+    occurrences,
+    dates,
+    displayZone: timeZone,
+    timeFormat,
+    locale,
+    columnWidthPx,
+  })
   const columns = `${MOBILE_GUTTER_WIDTH_PX}px repeat(7, minmax(${MOBILE_COLUMN_WIDTH_PX}px, 1fr))`
   return (
     <section data-slot="weekly-calendar" className="flex h-full min-h-0 flex-col">
@@ -91,7 +127,37 @@ export function WeeklyCalendar({
                 intervalMinutes={intervalMinutes}
                 pxPerMinute={PX_PER_MINUTE}
                 isToday={date === today}
-              />
+              >
+                {layouts.get(date)?.placed.map((item) => {
+                  const { height } = segmentGeometry(
+                    item.segment.startMinute,
+                    item.segment.endMinute,
+                    PX_PER_MINUTE,
+                  )
+                  return (
+                    <EventBlock
+                      key={`${item.segment.key}@${item.segment.date}`}
+                      item={item}
+                      state={item.segment.key === selectedKey ? 'selected' : 'default'}
+                      density={densityFor(height)}
+                      timeFormat={timeFormat}
+                      locale={locale}
+                      pxPerMinute={PX_PER_MINUTE}
+                      onSelect={selectOccurrence}
+                    />
+                  )
+                })}
+                {layouts.get(date)?.overflow.map((entry) => (
+                  <OverflowIndicator
+                    key={`overflow-${entry.clusterIndex}`}
+                    entry={entry}
+                    pxPerMinute={PX_PER_MINUTE}
+                    timeFormat={timeFormat}
+                    locale={locale}
+                    onSelect={selectOccurrence}
+                  />
+                ))}
+              </DayColumn>
             ))}
           </div>
         </div>

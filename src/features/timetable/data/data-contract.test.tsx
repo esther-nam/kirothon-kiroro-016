@@ -65,8 +65,7 @@ describe('contract types', () => {
 
   it('[R18.1] types compile with the shapes of design 5.1', () => {
     expectTypeOf<Result<number>>().toEqualTypeOf<
-      | { ok: true; value: number }
-      | { ok: false; error: import('./types').RepositoryError }
+      { ok: true; value: number } | { ok: false; error: import('./types').RepositoryError }
     >()
     expectTypeOf<UpdateRequest['scope']>().toEqualTypeOf<
       'event' | 'occurrence' | 'following' | 'series'

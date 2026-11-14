@@ -116,7 +116,10 @@ describe('WeeklyCalendar', () => {
     const column = document.querySelector<HTMLElement>('[data-slot="day-column"]')!
     expect(column.style.height).toBe('1440px')
     expect(column.style.backgroundImage).toContain('linear-gradient')
-    expect(column.children).toHaveLength(0)
+    // Only event blocks and overflow controls are children: no per-row elements.
+    for (const child of Array.from(column.children)) {
+      expect(['event-block', 'overflow-indicator']).toContain(child.getAttribute('data-slot'))
+    }
   })
 
   it('[R3.7, R3.8, R3.9] header row, gutter and scroller are sticky or scrollable', async () => {

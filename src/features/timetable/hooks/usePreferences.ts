@@ -34,7 +34,9 @@ export interface UsePreferencesResult {
 }
 
 /** The only way components read preferences (design 7.3). */
-export function usePreferences(browserZone: string | undefined = detectBrowserZone()): UsePreferencesResult {
+export function usePreferences(
+  browserZone: string | undefined = detectBrowserZone(),
+): UsePreferencesResult {
   const repository = useRepository()
   const queryClient = useQueryClient()
 
@@ -50,7 +52,9 @@ export function usePreferences(browserZone: string | undefined = detectBrowserZo
   const write = useMutation({
     mutationFn: async (patch: Partial<PreferencesRow> | 'reset'): Promise<PreferencesRow> => {
       const result =
-        patch === 'reset' ? await repository.resetPreferences() : await repository.patchPreferences(patch)
+        patch === 'reset'
+          ? await repository.resetPreferences()
+          : await repository.patchPreferences(patch)
       if (!result.ok) throw new Error(result.error.code)
       return result.value
     },
@@ -60,7 +64,13 @@ export function usePreferences(browserZone: string | undefined = detectBrowserZo
       if (previous) {
         const next: PreferencesRow =
           patch === 'reset'
-            ? { timeZone: null, timeFormat: null, intervalMinutes: null, wakeUpTime: null, bedtime: null }
+            ? {
+                timeZone: null,
+                timeFormat: null,
+                intervalMinutes: null,
+                wakeUpTime: null,
+                bedtime: null,
+              }
             : { ...previous, ...patch }
         queryClient.setQueryData(PREFERENCES_QUERY_KEY, next)
       }

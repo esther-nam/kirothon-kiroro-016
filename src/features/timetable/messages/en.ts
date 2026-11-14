@@ -16,6 +16,13 @@ export const en = {
     untitled: 'Untitled event',
     untagged: 'No tag',
     teamLabel: 'Team',
+    tagLabel: 'Tag',
+  },
+  overflow: {
+    label: (n: number) => `+${n} more`,
+    triggerName: (n: number, range: string) =>
+      `${n} more ${n === 1 ? 'event' : 'events'}, ${range}`,
+    listTitle: (n: number) => `${n} hidden ${n === 1 ? 'event' : 'events'}`,
   },
   dialog: {
     cancel: 'Cancel',
@@ -27,6 +34,6 @@ export const en = {
     format12h: '12-hour',
     format24h: '24-hour',
   },
-} as const;
+} as const
 
-export type Messages = typeof en;
+export type Messages = typeof en
