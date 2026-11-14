@@ -72,7 +72,11 @@ export function CalendarHeader({
         </h2>
       </div>
 
-      <div className="flex items-center gap-2" role="group" aria-label={en.calendar.weekHeaderLabel}>
+      <div
+        className="flex items-center gap-2"
+        role="group"
+        aria-label={en.calendar.weekHeaderLabel}
+      >
         <Button
           type="button"
           variant="outline"

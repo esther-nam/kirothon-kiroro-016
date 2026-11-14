@@ -214,7 +214,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.2, R2.7, R14.5_
 
-- [-] 2.6 Build CalendarHeader with navigation
+- [x] 2.6 Build CalendarHeader with navigation
   - Objective: Header text and previous, next and Today controls.
   - Files: `src/features/timetable/components/calendar/CalendarHeader.tsx`
   - Done when: it matches Figma. There is no date picker. Today is inactive on the current week. Controls at a navigation limit are inactive with an explanation. The header text is announced through a polite live region.
@@ -223,7 +223,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.3, R1.9, R2.1, R2.2, R2.3, R2.4, R2.9, R2.10, R21.6_
 
-- [~] 2.7 Build the grid frame: WeeklyCalendar, DayHeader, TimeGutter, DayColumn
+- [x] 2.7 Build the grid frame: WeeklyCalendar, DayHeader, TimeGutter, DayColumn
   - Objective: The empty grid with sticky headers, time labels and scrolling.
   - Files: `src/features/timetable/components/calendar/WeeklyCalendar.tsx`, `DayHeader.tsx`, `TimeGutter.tsx`, `DayColumn.tsx`
   - Done when: seven columns run Monday to Sunday. The gutter shows labels for the interval and visible range in the user's time format. Rows align to local time. Grid lines are CSS, not one element per row. The day header row and toolbar stay visible while scrolling vertically, and the gutter stays visible while scrolling horizontally. The first render scrolls to the start of the visible hours. Vertical scroll is kept when changing weeks.
@@ -232,7 +232,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R1.1, R1.8, R2.8, R3.2, R3.7, R3.8, R3.9, R3.10_
 
-- [~] 2.8 Implement the week data hook (one-time events)
+- [-] 2.8 Implement the week data hook (one-time events)
   - Objective: `useWeekOccurrences` loads bundles for the visible window and returns one-time occurrences.
   - Files: `src/features/timetable/hooks/useWeekOccurrences.ts`, `src/domain/recurrence/expand.ts` (one-time branch only)
   - Done when: each one-time slot yields exactly one occurrence. The query key is the UTC window, so a timezone change refetches. Requests for weeks the user has left are cancelled, and only the last requested week's data is shown. Data is requested by range only.
