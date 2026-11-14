@@ -1,1 +1,9 @@
 mcp.json
+node_modules
+dist
+coverage
+.env
+.env.local
+test-results
+playwright-report
+*.tsbuildinfo

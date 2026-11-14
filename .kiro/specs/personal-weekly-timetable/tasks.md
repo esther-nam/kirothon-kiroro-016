@@ -64,7 +64,7 @@ Rules for every task:
   - Status: `Decision` (needs your approval of the wording)
   - _Requirements: none directly (enables all)_
 
-- [~] 1.1 Verify the workspace and scaffold the project
+- [x] 1.1 Verify the workspace and scaffold the project
   - Objective: Confirm there is no existing app (currently true), then create a Vite + React + TypeScript (strict) project with ESLint, Prettier, Vitest, React Testing Library and Playwright.
   - Files: `package.json`, `tsconfig.json`, `vite.config.ts`, `vitest.config.ts`, `playwright.config.ts`, `eslint.config.js`, `.prettierrc`, `.env.example`, `src/main.tsx`, `src/App.tsx`, `tests/e2e/smoke.spec.ts`
   - Done when: `npm run build`, `npm run lint`, `npm test` and `npm run test:e2e` pass. `tsconfig` has `strict: true` and `noUncheckedIndexedAccess: true`. A `test:tz` script runs Vitest under `TZ=UTC`, `TZ=Asia/Seoul` and `TZ=America/Los_Angeles`. Playwright has a desktop Chromium project and two mobile projects (Pixel-class Chromium, iPhone-class WebKit).
