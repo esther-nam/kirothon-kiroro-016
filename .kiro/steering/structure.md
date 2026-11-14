@@ -8,11 +8,16 @@
 src/
   features/<feature>/  Components, hooks, store, and tests per feature
   domain/              Pure logic: intervals, availability, time conversion
+    time/              civil dates, zone conversion, DST resolver, week range, day split
+    recurrence/        slot expansion, exceptions, scope operations
+    layout/            overlap clustering, overflow, density, hit-testing
+    validation/        event input rules, issue codes
+    format/            time, header and date formatting (locale aware)
   lib/                 Supabase client, shared utilities, Zod schemas
   components/ui/       shadcn/ui primitives
 supabase/
   migrations/          SQL migrations (schema, RLS policies, functions)
-  functions/           Edge Functions
+  functions/           Edge Functions; each `functions/<name>/` has its own `deno.json` import map
 tests/
   e2e/                 Playwright tests
 ```

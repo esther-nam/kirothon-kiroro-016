@@ -16,7 +16,7 @@ A collaborative weekly scheduling web app. Each user keeps a personal Monday-to-
 6. Gray "busy" blocks whenever any visible member is unavailable
 7. Per-member colors and multi-member filtering
 8. Drag-to-select mutually free slots
-9. Confirmed group events appear on every member's personal calendar
+9. Team-confirmed group events appear on every member's personal calendar (subject to the Team Scheduling spec; participant events need acceptance)
 10. Display preferences are private to each user
 
 ## MVP scope (build first)
@@ -25,8 +25,9 @@ Auth, personal weekly timetable, team create/join, shared availability view with
 Deferred until after MVP: member colors and filtering polish, 5-minute interval, per-week overrides, notifications, event editing/cancellation flows beyond the basics.
 
 ## Task principles
-- Each calendar entry is a task with a tag. The same task appearing on several days is one task and shows in one color, so a user can see at a glance where their time goes.
-- Tags and their colors are personal organization tools and stay private.
+- Each calendar entry is an event with one or more time slots. The same event on several days is one event, so a user can see at a glance where their time goes.
+- Event blocks are monochrome. Only the tag indicator is colored.
+- Tags and their colors are per user, personal organization tools, and stay private. Participants see an event's title and time, never each other's tags.
 
 ## Timezone principles
 - Each user picks their own display timezone (default: auto-detected from the browser).
@@ -42,5 +43,5 @@ Deferred until after MVP: member colors and filtering polish, 5-minute interval,
 ## Non-goals (for now)
 - Integration with Google/Outlook calendars
 - Teams larger than 6
-- Recurring group events
+- Recurring group events created through team scheduling (events with participants may recur)
 - Native mobile apps

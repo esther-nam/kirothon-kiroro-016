@@ -292,7 +292,7 @@ erDiagram
 
 Names are `snake_case` (`structure.md`). `uuid` keys default to `gen_random_uuid()`. All timestamps are `timestamptz` in UTC unless marked local.
 
-**`profiles`** (owned by the Authentication spec; required columns listed). `id uuid PK -> auth.users`, `username text unique`, `display_name text`. Until that spec exists, Phase 3 includes a minimal stub migration (dependency D-A, section 12).
+**`profiles`** (owned by the Authentication spec; required columns listed). `id uuid PK -> auth.users`, `username text unique`, `display_name text`. Decision D-A: the Authentication spec owns this table and is written before Phase 3. No stub migration is added.
 
 **`timetable_preferences`** (one row per user, all fields nullable, null means default)
 | Column | Type | Constraint |
@@ -849,7 +849,7 @@ Ordering notes:
 
 | Spec | Need | Interface in this design | Status | Fallback if absent |
 |---|---|---|---|---|
-| **Authentication** | Signed-in user, `profiles` (`id`, `username`, `display_name`) | `auth.uid()` in policies, the JWT in the Edge Function, `profiles` columns | Empty folder. **Blocks Phase 3** | Phase 3 can use Supabase Auth test users and a minimal `profiles` migration marked as superseded (decision D-A needed) |
+| **Authentication** | Signed-in user, `profiles` (`id`, `username`, `display_name`) | `auth.uid()` in policies, the JWT in the Edge Function, `profiles` columns | Empty folder. **Blocks Phase 3** | None. Decision D-A: Phase 3 waits for the Authentication spec (no stub) |
 | **Friend Management** | Friend search by display name or username, friend check for invitations | `FriendDirectory.search`, `is_friend(a, b)` | Not specified | Mock directory in Phases 1 to 4. Phase 5 needs the real spec |
 | **Tag management component** | List own tags (name, `color_key`), create and edit tags | `TagDirectory.listMine`, `tags` table columns | Not specified | Mock tags until it exists. The selector never creates tags (**Provisional OQ-40a**) |
 | **Team Management and Team Scheduling** | Team name and id on events, any invitation bypass | `events.team_id`, bundle `team` field | Not specified | Always null. No bypass (R18.5) |
@@ -882,7 +882,7 @@ Ordering notes:
 1. **D-1** Custom grid instead of FullCalendar.
 2. **D-3, S-9** The four new dependencies.
 3. **D-4** All writes through the Edge Function, with service-only database write functions.
-4. **D-A** Who owns `profiles`, and whether Phase 3 may add a stub.
+4. **D-A** Decided: the Authentication spec owns `profiles` and comes before Phase 3. No stub.
 5. Adopt the proposed defaults for OQ-36 to OQ-42 as written in this design, or answer them. OQ-36, OQ-37 and OQ-39 change Phase 4.
 6. Confirm the six-phase plan replaces requirements 1.5.
 7. Provide Figma access or exports. Section 7's mapping and every `[F]` value depend on it.
@@ -910,10 +910,10 @@ Ordering notes:
 | R21 accessibility | 8.5 |
 
 ## 15. Review Checklist
-- [ ] Approve or reject decisions D-1 to D-14 (section 1), especially D-1, D-3 and D-4.
-- [ ] Confirm the provisional policies: OQ-36 (DST gap), OQ-37 (individual changes win), OQ-38 (limit counting, left status), OQ-39 (keep wall-clock values), OQ-40, OQ-41 (undo personal events only).
-- [ ] Decide D-A (`profiles` ownership) and confirm the Authentication spec comes before Phase 3.
-- [ ] Approve the six-phase plan.
-- [ ] Provide Figma access so the `[unverified]` mappings and `[F]` constants can be filled.
-- [ ] Approve steering changes S-1 to S-11.
-- [ ] Approve this document before I write `tasks.md`.
+- [~] Approve or reject decisions D-1 to D-14 (section 1), especially D-1, D-3 and D-4.
+- [x] Confirm the provisional policies: OQ-36 (DST gap), OQ-37 (individual changes win), OQ-38 (limit counting, left status), OQ-39 (keep wall-clock values), OQ-40, OQ-41 (undo personal events only). **Confirmed as proposed; all defaults adopted (gate G-3).**
+- [x] Decide D-A (`profiles` ownership) and confirm the Authentication spec comes before Phase 3. **Decided: the Authentication spec owns `profiles` and is written before Phase 3. No stub migration is added.**
+- [~] Approve the six-phase plan.
+- [~] Provide Figma access so the `[unverified]` mappings and `[F]` constants can be filled.
+- [~] Approve steering changes S-1 to S-11.
+- [~] Approve this document before I write `tasks.md`.
