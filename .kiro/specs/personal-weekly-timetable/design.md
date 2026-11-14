@@ -1,6 +1,6 @@
 # Design: Personal Weekly Timetable
 
-Status: DRAFT v1, awaiting review. Based on `requirements.md` v4. `tasks.md` is not started. No implementation code exists or is written here.
+Status: DRAFT v2, awaiting review. Based on `requirements.md` v5 and the Figma audit decisions FD-1 to FD-8 (`figma-audit.md`). `tasks.md` is not started. No implementation code exists or is written here.
 
 ## 0. Inputs inspected and what they mean for the design
 
@@ -9,17 +9,17 @@ Status: DRAFT v1, awaiting review. Based on `requirements.md` v4. `tasks.md` is 
 | Source code | None. No `package.json`, `src/`, `supabase/` or `tests/` | Everything is greenfield. Phase 1 starts with project scaffolding |
 | Database schema | None | The schema in section 4 is proposed, not extending anything |
 | Authentication | None. `.kiro/specs/authentication/` is empty | Phase 3 depends on a spec that does not exist yet (section 12). Phases 1 and 2 run without auth |
-| Steering | Unchanged since v4 requirements. `tech.md` still says 5-minute resolution, one tag per task, owner-only privacy | Steering updates S-1 to S-7 (requirements 2.3) are prerequisites. Section 13 adds three more |
-| Figma | Not readable in this session | Component names come from the brief. Every Figma mapping is `[unverified]`. No pixel values appear here |
+| Steering | Unchanged. `tech.md` still says 5-minute resolution, one tag per task, owner-only privacy, "2 to 6" team size and "reassign or untag before deleting a tag" | Steering updates S-1 to S-7 and S-12 to S-15 (requirements 2.3) are prerequisites. Section 13 adds more |
+| Figma | Audited in task 1.4 (`figma-audit.md`) | Approved initial values are recorded in `figma-audit.md` section 9 as `FC-1` to `FC-9` and used below. Screens that do not exist yet are listed in section 7.5 and gate implementation |
 | Requirements | OQ-36 to OQ-42 still open | Design uses the proposed defaults, marked **Provisional**, each isolated so it can change cheaply |
 
-Conventions: `[F]` Figma value to confirm. **Provisional (OQ-n)** a decision taken from a proposed default. `Rx.y` links to a requirement.
+Conventions: `[F]` Figma value to confirm; `[FC-n]` approved initial Figma constant, pending visual QA; `[P]` depends on a Figma screen that is not designed yet (section 7.5). **Provisional (OQ-n)** a decision taken from a proposed default. `Rx.y` links to a requirement.
 
 ## 1. Technical decisions
 
 | ID | Decision | Alternatives considered | Why |
 |---|---|---|---|
-| D-1 | **Custom calendar grid**, not FullCalendar (deviation from `tech.md`) | FullCalendar timeGrid with the Luxon plugin | Requirements need: per-day `+N more` with a custom order (R4.6 to R4.8), keyboard cell cursor (R21.2), tiered compact blocks (R5.9), 5-minute rows over 24 hours (R19.5), wall-clock geometry on DST days, and the component list in the brief (DayHeader, TimeGutter, TimeSlot). FullCalendar's DOM and keyboard model would be fought on each. Cost: we write the grid, layout and hit-testing ourselves. **Needs your approval and a steering edit** |
+| D-1 | **Custom calendar grid**, not FullCalendar (deviation from `tech.md`) | FullCalendar timeGrid with the Luxon plugin | Requirements need: per-day `+N more` with a custom order (R4.6 to R4.8), keyboard cell cursor (R21.2), tiered compact blocks (R5.9), 15-minute rows over 24 hours (R19.5), wall-clock geometry on DST days, and the component list in the brief (DayHeader, TimeGutter, TimeSlot). FullCalendar's DOM and keyboard model would be fought on each. Cost: we write the grid, layout and hit-testing ourselves. **Needs your approval and a steering edit** |
 | D-2 | **Luxon** for zone conversion, plus one in-house **resolver** for DST gaps and repeated hours | `@js-temporal/polyfill`, `date-fns-tz` | Luxon is small and handles IANA zones through `Intl`. Temporal's disambiguation modes do not give "first valid time after the gap" (OQ-36 default). One resolver function keeps the policy in one place |
 | D-3 | **TanStack Query** for server state | Hand-written cache with Zustand | Needs cancellation (R2.6), caching (R19.2), retry, optimistic updates, mutation state. Steering says to separate UI state from server data. **New dependency, needs approval** |
 | D-4 | **Writes go through one Edge Function; database write functions are callable only by the service role** | Direct table writes under RLS; direct RPC from the browser | DST and recurrence validation live in TypeScript. If the browser could call write RPCs directly it could bypass them. Reads use RLS. Participant responses use a user-callable RPC (no DST logic) |
@@ -28,11 +28,15 @@ Conventions: `[F]` Figma value to confirm. **Provisional (OQ-n)** a decision tak
 | D-7 | **Wall-clock geometry**: blocks are positioned by local clock time of the display timezone, not elapsed time | Elapsed-time geometry | The gutter labels are the same for all seven columns, so DST days must use the same wall-clock axis. On the two DST days a block that spans the transition is drawn slightly differently from its elapsed duration (section 3.6) |
 | D-8 | **Tags assigned in their own table** (`event_tag_assignments`), not on the participant row | Tag column on `event_participants` | The creator can read all participant rows. A tag column would leak other users' tags (R17.5) |
 | D-9 | **Undo by deferred commit** for personal events | Soft delete with a purge job | No `deleted_at` filter on every query and no scheduled job. Cost: a closed tab flushes the delete on `pagehide`. Shared events delete immediately (**Provisional OQ-41**) |
-| D-10 | **TimeSlot is a virtual cell.** Grid lines come from CSS, pointer position maps to minutes, and one cursor `TimeSlot` is rendered for hover and focus | One DOM cell per slot (up to 2016 at 5 minutes over 24 hours) | Keeps DOM small and screen-reader output usable. Fallback if the virtual approach fails a spike: memoized per-slot cells behind the same `TimeSlot` interface |
+| D-10 | **TimeSlot is a virtual cell.** Grid lines come from CSS, pointer position maps to minutes, and one cursor `TimeSlot` is rendered for hover and focus | One DOM cell per slot (96 at 15 minutes over 24 hours) | Keeps DOM small and screen-reader output usable. Fallback if the virtual approach fails a spike: memoized per-slot cells behind the same `TimeSlot` interface |
 | D-11 | **No Realtime** in this feature | Supabase Realtime | Requirements dropped live sync (decision OQ-13 in v3). Refetch on focus and after mutations is enough |
 | D-12 | **Idempotency by `request_id`** stored in the change record | Idempotency table | Reuses the change record needed for notifications (R18.6) |
 | D-13 | **Form values keep both date and weekday per slot** | Convert and discard | Required by R8.8 (no value lost across Repeat toggles) |
 | D-14 | **Calendar arithmetic uses a zone-free civil date** (`LocalDate`, `YYYY-MM-DD`) and converts to instants only through the resolver | Arithmetic on `Date` or instants | Week navigation across months, years and DST cannot be affected by the machine timezone (R14.20) |
+| D-15 | **One time scale for every interval:** `pxPerMinute = 1` (60 min = 60 px, 30 = 30 px, 15 = 15 px). Row height is `interval * pxPerMinute` and is not a per-interval table `[FC-4]` | Per-interval row heights from Figma (16, 32, 64 px at 64 px per hour) | Event position and height depend only on time (R3.5, R3.15). Known deviation: Figma uses 64 px per hour (desktop) and 80 px per hour (mobile). Checked in visual QA. The constant is in one place |
+| D-16 | **Mobile grid is a free horizontal scroller of seven fixed-width columns** (about 140 px), with a fixed time gutter and a sticky day header. No day-at-a-time viewport and no week change on swipe `[FC-5]` | Day-at-a-time viewport; swipe to change week | Matches Figma frames and decision FD-7. Week change uses only the explicit controls (R16.13) |
+| D-17 | **Member limit is one constant, `MAX_EVENT_PEOPLE = 5`**, counting the creator. The creator plus at most 4 invited friends | Hard-coded 5; 6 as before | FD-2. The five primaries are the member colors, so a shared view never needs a sixth color (R5.17). Same constant used by the form, domain validation, Edge Function and database function |
+| D-18 | **Deleting a tag deletes only its assignments.** `event_tag_assignments` references tags with `on delete cascade` | Block deletion while assigned; reassign first | FD-3 (R22.6). Events and other users' data are untouched. Conflicts with steering `tech.md` (S-14) |
 
 New runtime dependencies proposed: `luxon`, `@tanstack/react-query`, `react-hook-form`, `zod`. All other tooling is from steering.
 
@@ -204,7 +208,7 @@ Two slots of one weekday cannot overlap (R7.17), so `(date, startMinute)` is uni
 ### 3.6 Day split and geometry (R5.15, R3.3, R3.4)
 - `splitByLocalDay(occurrence, displayZone)` returns one segment per local day touched: `{ date, startMinute, endMinute, continuesBefore, continuesAfter }`. The minute coordinates come from the **wall-clock** time of the display timezone, and the final segment ends at 1440.
 - Every segment keeps the occurrence key. Its label text always shows the occurrence's full original range (decision OQ-19, C-1). Example: Seoul Monday 08:00 to 10:00 (`2025-01-12T23:00Z` to `2025-01-13T01:00Z`) viewed in UTC gives Sunday `23:00 to 24:00` and Monday `00:00 to 01:00`, both labeled `23:00–01:00`.
-- Geometry: `top = (startMinute - visibleStart) * pxPerMinute` and `height = (endMinute - startMinute) * pxPerMinute`. `pxPerMinute = rowHeightPx[interval] / interval`, with `rowHeightPx` from Figma `[F]`. Positions never depend on the interval, only the scale does (R3.5, R3.6).
+- Geometry: `top = (startMinute - visibleStart) * pxPerMinute` and `height = (endMinute - startMinute) * pxPerMinute`. `pxPerMinute` is the constant 1 for every interval `[FC-4]` (D-15). A grid row is `interval * pxPerMinute` pixels (15, 30 or 60). Positions and heights never depend on the interval, only the row lines do (R3.5, R3.6, R3.15). A 5-minute span is 5 px internally; 5 minutes is not a selectable interval.
 - Blocks are clipped to the visible range. If a segment lies partly or fully outside, the day column gets an outside-hours indicator at the matching edge (R3.11, R3.12). Clipping changes the drawn rectangle, never the label text (R3.14).
 - **DST days and D-7.** The gutter is one wall-clock axis for all seven columns. On a spring-forward day nothing exists in the skipped hour, so that band stays empty. On a fall-back day the repeated hour has two real hours of events at the same wall-clock positions, so they are drawn overlapped and the layout in 3.8 spreads them side by side. A block spanning the transition is drawn from wall-clock start to wall-clock end, so its height differs from elapsed time by one hour. Displayed durations (details, accessible names) use elapsed time (R14.11). This is the only place R3.4 and R14.11 differ, and it is limited to the two transition days per year.
 
@@ -230,14 +234,14 @@ First occurrence rule: if Repeat From is after the slot's weekday in its week, t
 1. Sort by start ascending, end descending, then key (R4.8).
 2. **Cluster:** sweep in order, starting a new cluster when `start >= max end of the current cluster`. Touching blocks (`start == end`) do not join (R4.1).
 3. **Columns:** inside a cluster, place each block in the lowest column whose last end is `<= start`. `columnCount` is the highest column used plus one. Blocks that do not overlap anything use the full width (R4.5).
-4. **Width limit:** `maxColumns = max(1, floor(columnWidthPx / minBlockWidthPx))`, where `minBlockWidthPx` comes from Figma `[F]`. This applies to every viewport (R4.6).
+4. **Width limit:** `maxColumns = max(1, floor(columnWidthPx / minBlockWidthPx))`, where `minBlockWidthPx = 64` `[FC-3]`. This applies to every viewport (R4.6).
 5. If `columnCount > maxColumns`, columns `0..maxColumns-2` are drawn and the last column becomes an `OverflowIndicator` for the cluster, labeled `+N more`, where N is the count of occurrences in the hidden columns. The indicator opens a list of those occurrences, each selectable (R4.7).
 6. Output is a pure function of its inputs, so the same set always gives the same arrangement (R4.9).
 
 Chain overlap (A overlaps B, B overlaps C, A and C do not) is one cluster, and A and C may share a column (R4.4).
 
 ### 3.9 Density tiers and hit-testing (R5.9 to R5.12)
-- `densityFor(heightPx)` returns one of `full` (title, time, team), `titleTime`, `single` (title and indicator on one line), `minimal` (indicator only). Thresholds are Figma constants `[F]`. Lines are removed in the order team, then time, then the title shortens (R5.9).
+- `densityFor(heightPx)` returns one of `full` (title, time, team), `titleTime`, `single` (title and indicator on one line), `minimal` (indicator only). Initial thresholds `[FC-6]`, pending visual QA: `full` at 78 px or more, `titleTime` at 58 px or more, `single` at 32 px or more, `minimal` below 32 px. They were derived for 64 px per hour. At 1 px per minute a 30-minute block is 30 px and falls in `minimal`; visual QA decides whether `single` moves to 30 px. Lines are removed in the order team, then time, then the title shortens (R5.9).
 - Blocks always clip their content (`overflow: hidden`), so text cannot leave the block (R5.10). Full details come from the modal and the accessible name.
 - `hitTest(point, placedBlocks, minTargetPx)` is pure. It returns the block whose drawn rectangle contains the point. If none does, it returns the nearest block whose rectangle expanded to the minimum target contains the point. Drawn rectangles always win over expanded areas (R5.12). Press handling in a day column uses it, so a press on a block (or its expanded area) never starts a time-range selection (R6.9).
 
@@ -249,7 +253,7 @@ Chain overlap (A overlaps B, B overlaps C, A and C do not) is one cluster, and A
 ### 3.11 Form logic (pure functions in `domain/validation` and `domain/forms`)
 - `applyRepeatToggle(values, on)` implements R8.4 to R8.9. Slots always carry `date`, `weekday`, `startMinute`, `endMinute`. Turning Repeat on fills `weekday` from `date` only when `weekday` was never set by the user. Turning it off leaves `date` as it was. Nothing is deleted.
 - `defaultRepeatUntil(from)` returns the same day three months later, clamped to the last day of that month (R8.12). `maxRepeatUntil(from)` returns the same day two years later, clamped the same way (R8.14).
-- `validateEventInput(input, ctx)` returns issues, each `{ code, path, slotIndexes? }`. Codes: `TITLE_REQUIRED`, `TITLE_TOO_LONG`, `SLOT_END_NOT_AFTER_START`, `SLOT_START_AT_24`, `SLOT_NONEXISTENT_TIME`, `SLOTS_OVERLAP` (with both indexes), `SLOT_LIMIT`, `REPEAT_RANGE_INVALID`, `REPEAT_RANGE_TOO_LONG`, `SLOT_NO_OCCURRENCE`, `WEEKDAY_REQUIRED`, `DATE_REQUIRED`, `PARTICIPANT_LIMIT`, `TIMEZONE_INVALID`.
+- `validateEventInput(input, ctx)` returns issues, each `{ code, path, slotIndexes? }`. Codes: `TITLE_REQUIRED`, `TITLE_TOO_LONG`, `SLOT_END_NOT_AFTER_START`, `SLOT_START_AT_24`, `SLOT_NONEXISTENT_TIME`, `SLOTS_OVERLAP` (with both indexes), `SLOT_LIMIT`, `REPEAT_RANGE_INVALID`, `REPEAT_RANGE_TOO_LONG`, `SLOT_NO_OCCURRENCE`, `WEEKDAY_REQUIRED`, `DATE_REQUIRED`, `PARTICIPANT_LIMIT` (more than `MAX_EVENT_PEOPLE` = 5 people including the creator, D-17), `TIMEZONE_INVALID`. Tag input issues: `TAG_NAME_REQUIRED`, `TAG_NAME_TAKEN` (case-insensitive), `TAG_COLOR_INVALID`.
 - Rules that depend on Repeat state ignore hidden fields (R15.22).
 - The same function runs in the browser and in the Edge Function (R15.16).
 
@@ -300,14 +304,14 @@ Names are `snake_case` (`structure.md`). `uuid` keys default to `gen_random_uuid
 | `user_id` | uuid PK, FK profiles | |
 | `time_zone` | text null | valid IANA name (trigger against `pg_timezone_names`) |
 | `time_format` | text null | `'12h'` or `'24h'` |
-| `interval_minutes` | smallint null | in (5, 15, 30) |
+| `interval_minutes` | smallint null | in (15, 30, 60) |
 | `visible_start_hour` | smallint null | 0..23 |
 | `visible_end_hour` | smallint null | 1..24, and greater than start when both set |
 | `updated_at` | timestamptz | |
 
 Row absent or a column null means "use the default" (R13.12, R13.14). "Reset to Defaults" sets all columns to null (R13.13). The client resolves the effective timezone as saved, else browser, else UTC (R14.17).
 
-**`tags`** (owned by the tag management component; required columns). `id uuid PK`, `owner_id uuid FK profiles`, `name text`, `color_key text` (a palette key from the Figma design system, not a hex value), `unique (owner_id, lower(name))`, `unique (id, owner_id)`.
+**`tags`** (managed through Tag Management, R22; required columns). `id uuid PK`, `owner_id uuid FK profiles`, `name text`, `color_key text check (color_key in ('blue','deep_purple','magenta','orange','yellow'))` (a palette key from the Figma design system, not a hex value; FD-3, R22.4), `unique (owner_id, lower(name))`, `unique (id, owner_id)`.
 
 **`events`**
 | Column | Type | Constraint |
@@ -373,10 +377,10 @@ Modified times are stored as instants and follow the one-time rules (a gap is re
 | `invited_by` | uuid | |
 | `invited_at`, `responded_at` | timestamptz | |
 
-The creator has a row with status `accepted` that the write function creates and no function can change. The calendar query is "events where I have an `accepted` row", which is one path for creators and participants. The participant limit (R9.7) counts rows with status `pending` or `accepted` (**Provisional OQ-38b**) and is checked in the write function while the event row is locked.
+The creator has a row with status `accepted` that the write function creates and no function can change. The calendar query is "events where I have an `accepted` row", which is one path for creators and participants. The participant limit (R9.7) is 5 people including the creator (D-17) and counts rows with status `pending` or `accepted` (**Provisional OQ-38b**) and is checked in the write function while the event row is locked.
 
 **`event_tag_assignments`** (private to the assigning user)
-`event_id`, `user_id`, `tag_id`, PK `(event_id, user_id)`, composite FK `(tag_id, user_id) -> tags(id, owner_id)` so a user can only use their own tags (R17.5). A deleted or missing tag means no indicator (**Provisional OQ-40c**).
+`event_id`, `user_id`, `tag_id`, PK `(event_id, user_id)`, composite FK `(tag_id, user_id) -> tags(id, owner_id)` so a user can only use their own tags (R17.5). The foreign key is `on delete cascade`: deleting a tag removes its assignments, so events stay unchanged and show no indicator for it (D-18, R22.6). No query or trigger blocks a tag delete because events use it.
 
 **`event_change_records`** (transactional outbox and idempotency log)
 `id`, `request_id uuid`, `actor_id`, `event_id` (no foreign key so records outlive a deleted event), `kind` (`created`, `updated`, `deleted`, `invited`, `accepted`, `declined`, `left`, `removed`, `scope_applied`), `targets uuid[]`, `payload jsonb` (ids and changed field names only, no titles), `created_at`, `consumed_at null`. `unique (actor_id, request_id)`. The Notifications spec reads rows with non-empty `targets` (R18.6). Rows are kept for the retention period that spec defines.
@@ -430,7 +434,10 @@ interface TimetableRepository {
   resetPreferences(): Promise<Result<PreferencesRow>>;
 }
 interface FriendDirectory { search(query: string): Promise<Result<UserSummary[]>> }  // Friend Management spec
-interface TagDirectory   { listMine(): Promise<Result<Tag[]>> }                     // tag management component
+interface TagDirectory   { listMine(): Promise<Result<Tag[]>>;                    // Tag Management (R22), screen pending [P]
+                           create(input: { name: string; colorKey: TagColorKey }): Promise<Result<Tag>>;
+                           update(id: string, patch: { name?: string; colorKey?: TagColorKey }): Promise<Result<Tag>>;
+                           remove(id: string): Promise<Result<void>> }       // removes assignments only (D-18)
 ```
 
 `Result<T>` is `{ ok: true, value } | { ok: false, error }`. Error codes: `VALIDATION` (with issues), `FORBIDDEN`, `NOT_FOUND`, `STALE_VERSION`, `LIMIT_EXCEEDED`, `UNAVAILABLE`.
@@ -470,7 +477,7 @@ HTTP mapping (`structure.md`): 400 or 422 `VALIDATION` with issue list, 401 no o
 1. The editor produces `EventInput`: `title`, `timeZone`, `tagId?`, `repeat?` (`from`, `until`), `slots[]` (each `{ date | weekday, startMinute, endMinute }`), `participantIds[]`.
 2. Validation runs in the browser, then again in the Edge Function (section 3.11).
 3. `save_event` runs in one transaction: insert `events` (version 1), `recurrence_rules` if repeating, one `event_segments` row, the `event_slots` rows, a creator `event_participants` row (`accepted`), a `pending` row per participant, an `event_tag_assignments` row if a tag was chosen, and one `event_change_records` row (`created`, plus `invited` records for each participant).
-4. Participant checks inside the transaction: not the creator, no duplicates, each is a friend of the creator (through the Friend Management interface, section 12), count of creator plus participants at most 6.
+4. Participant checks inside the transaction: not the creator, no duplicates, each is a friend of the creator (through the Friend Management interface, section 12), count of creator plus participants at most `MAX_EVENT_PEOPLE` = 5 (D-17).
 5. The response is the new `EventBundle`. The browser invalidates the affected week queries (R7.20).
 
 ### 6.2 Retrieve events for the visible week (R1, R14, R19)
@@ -536,7 +543,7 @@ sequenceDiagram
 
 ## 7. Component Architecture
 
-Component names come from the brief. The Figma frames were not readable, so every "Figma" column entry is `[unverified]`. Components marked **added** are not in the brief's list and need a Figma counterpart (requirements 2.2).
+Component names come from the brief and are mapped to Figma components in `figma-audit.md` section 1 (the earlier `[unverified]` flags are cleared). Components marked **added** are not in the brief's list. Components without an approved Figma design are listed in section 7.5.
 
 ### 7.1 Component tree
 
@@ -575,7 +582,7 @@ Types shown are the contract, not implementation. `LocalDate`, `Instant` come fr
 
 | Component (Figma) | Responsibility | Props | Owns state | Notes |
 |---|---|---|---|---|
-| **AppHeader** (`[unverified]`) | App chrome: Add Event button (R6.14), settings entry, slot for the auth user menu | `{ onAddEvent(): void; onOpenSettings(): void; userMenu?: ReactNode }` | none | The user menu belongs to the Authentication spec |
+| **AppHeader** | App chrome: Add Event button (R6.14), settings entry, slot for the auth user menu | `{ onAddEvent(): void; onOpenSettings(): void; userMenu?: ReactNode }` | none | The user menu belongs to the Authentication spec |
 | **WeeklyCalendar** | Container. Reads preferences and week data, owns scroll container, measures column width, wires interactions | `{}` (reads hooks) | scroll position (DOM), column width (ResizeObserver) | Composes everything below. Only component that talks to query hooks for the grid |
 | **CalendarHeader** | Month, year, range text and previous, next, Today controls (R1, R2) | `{ monday: LocalDate; locale: string; isCurrentWeek: boolean; canPrev: boolean; canNext: boolean; onPrev(): void; onNext(): void; onToday(): void }` | none | Sticky (R3.8). Header text announced via `aria-live="polite"` (R21.6) |
 | **DayHeader** | Weekday and date for one day (R1.8) | `{ date: LocalDate; locale: string; isToday: boolean; hasOutsideHours?: boolean }` | none | Sticky row (R3.8) |
@@ -590,8 +597,9 @@ Types shown are the contract, not implementation. `LocalDate`, `Instant` come fr
 | **EventTimeSlotInput** | One slot row: date or weekday, start, end, remove (R7.5 to R7.12, R8) | `{ index: number; repeat: boolean; control: Control<EventFormValues>; timeFormat; errors?: SlotIssue[]; canRemove: boolean; onRemove(): void }` | none (form-controlled) | Shows date picker when Repeat is off, weekday select when on. Times at 1-minute precision |
 | **RecurrenceSettings** | Repeat toggle and the From and Until pickers (R8) | `{ control; timeZone: string; onToggle(on: boolean): void; errors? }` | none | Calls `applyRepeatToggle` (3.11). Pickers hidden, not cleared, when off (R8.8) |
 | **ParticipantSelector** | Friend search, chips, limit (R9) | `{ value: ParticipantChipData[]; onChange(v): void; search(q: string): Promise<Result<UserSummary[]>>; limit: number; statuses?: Record<string, ParticipantStatus>; disabled?: boolean }` | query text, results, search status | Search starts at 2 characters (R9.1). Never shows email or phone (R9.2) |
-| **TimetableSettings** | Interval, format, visible hours, timezone, Reset (R13) | `{ prefs: EffectivePreferences; onChange(patch: PreferencesPatch): void; onReset(): void; saving: boolean; error?: string }` | none | Applies immediately (R13.2). Visible start and end hours validated together (R13.7) |
-| **TagSelector** (added) | Choose own tag, none allowed | `{ value: string\|null; tags: Tag[]; onChange(id: string\|null): void; disabled?: boolean }` | none | Reads `TagDirectory`. No tag creation in this spec (**Provisional OQ-40a**) |
+| **TimetableSettings** `[P]` | Interval (15, 30, 60), format, visible hours, timezone, Reset (R13) | `{ prefs: EffectivePreferences; onChange(patch: PreferencesPatch): void; onReset(): void; saving: boolean; error?: string }` | none | Applies immediately (R13.2). Visible start and end hours validated together (R13.7) |
+| **TagSelector** (added) | Choose own tag, none allowed | `{ value: string\|null; tags: Tag[]; onChange(id: string\|null): void; onManageTags(): void; disabled?: boolean }` | none | Reads `TagDirectory`. Offers a "Manage tags" action that opens `TagManagement` (R22.1) `[P]`. Shows no tag when the selected tag was deleted (R22.9) |
+| **TagManagement** (added) `[P]` | Create, rename, change color, delete and view own tags (R22). Opened from `TagSelector` | `{ tags: Tag[]; onCreate(input): Promise<Result<Tag>>; onUpdate(id, patch): Promise<Result<Tag>>; onDelete(id): Promise<Result<void>>; onClose(): void }` | none (list state in TanStack Query) | Screen and delete confirmation are not designed yet; no visual design is specified here (section 7.5). Palette choice limited to the five primaries (R22.4). Deleting leaves events unchanged (R22.6) |
 | **TimezoneSelect** (added) | IANA zone picker, name visible (R7.16) | `{ value: string; onChange(z: string): void; disabled?: boolean }` | search text | Used for event timezone and for the settings timezone. Disabled for existing events (`A-15`) |
 | **ScopeDialog** (added) | Occurrence, Following, Series choice with only allowed options (R11.1, R11.3) | `{ allowed: Scope[]; action: 'edit'\|'delete'; preview?: ChangePreview; onChoose(s: Scope): void; onCancel(): void }` | none | |
 | **ConfirmDialog** (added) | Delete, past-occurrence and discard confirmations | `{ kind: 'delete'\|'past'\|'discard'; details?: string; onConfirm(): void; onCancel(): void }` | none | |
@@ -622,11 +630,30 @@ interface EventFormValues {
 ```
 Both `date` and `weekday` stay on every slot at all times (D-13). `toEventInput(values)` drops the inactive one when building the request.
 
+### 7.5 Pending Figma designs (implementation gate)
+The user designs these with Figma AI and approves them. **Implementation of the dependent part must not start until its design is approved.** Already approved components (`figma-audit.md` section 1.1) may proceed. No visual design is defined in this document.
+
+| Screen or component | Components and requirements that depend on it | Phase |
+|---|---|---|
+| Timetable Settings (desktop and mobile) | `TimetableSettings` UI; R13, R16.8. Preference logic, storage and the grid reading the preferences may proceed | 2 |
+| Tag Management (desktop and mobile) and its delete confirmation | `TagManagement`, `TagSelector` link; R7.19, R22 | 2 |
+| Desktop Edit Event modal; read-only event view with Leave and own-tag selector | `EventEditorModal` modes `edit` (desktop) and `readonly`; R7.25, R10.7 to R10.9 | 2 and 5 |
+| Confirmation for modifying completed occurrences; delete choice for a multi-date event; occurrence-count preview | `ConfirmDialog` variants, `ScopeDialog` preview; R8.21, R11.10, R11.11, R12.3 | 2 and 4 |
+| Undo action on the delete toast | R12.9, R12.10 | 2 |
+| `+N more` indicator and list (desktop popover, mobile sheet) | `OverflowIndicator`; R4.6, R4.7 | 1 |
+| Outside-visible-hours indicator | `OutsideHoursIndicator`; R3.12, R3.13 | 1 |
+| Participant status chips (pending, accepted, declined, left) | `ParticipantChip`; R9.28, R15.23, R15.25 | 5 |
+| Missing mobile interaction states (overflow list, settings, tag management, read-only view) | R16 | 1, 2 and 5 |
+| Block Hover and Selected states (Hover is not distinguishable from Default; Focus equals Selected) | `EventBlock`; R5.7 | 1 |
+
+Figma edits needed because of the decisions: remove the Calendar field from Add Event (FD-5); counter "n/5, up to 4 invitations" (FD-2); 1 px `#171717` outline on Orange and Yellow tag indicators (FD-1); remove any 5-minute option (FD-4).
+
 ## 8. UI Integration
 
 ### 8.1 Layout strategy (R16)
-- One responsive component tree. Breakpoint and the number of days visible at once on mobile come from Figma `[F]` and are two constants: `DESKTOP_MIN_WIDTH` and `MOBILE_VISIBLE_DAYS`.
-- The grid is a horizontally scrollable strip of seven equal day columns inside a scroll container. On desktop all seven fit. On mobile the container shows `MOBILE_VISIBLE_DAYS` columns and scrolls horizontally with scroll-snap, and every day is reachable (R16.2). The gutter is sticky on the left (R3.9). Day headers and the toolbar are sticky at the top (R3.8).
+- One responsive component tree. Constants (initial values, pending visual QA): `DESKTOP_MIN_WIDTH = 1024` px `[FC-1]`, `MOBILE_COLUMN_WIDTH = 140` px `[FC-5]`, `LONG_PRESS_MS = 400` `[FC-2]`, `MIN_BLOCK_WIDTH = 64` px `[FC-3]`, `PX_PER_MINUTE = 1` `[FC-4]`.
+- **Desktop** (viewport at least 1024 px): all seven day columns fit; the gutter, header and toolbar are sticky (R3.8, R3.9).
+- **Mobile** (below 1024 px): seven weekday columns, Monday to Sunday, each 140 px wide, so about 2 to 3 are visible and all seven are reachable by horizontal scrolling (R16.2, R16.9). The time gutter is fixed on the left (R16.10). The grid has two independent scroll axes (R16.11). The day header row is sticky during vertical scroll and moves with the columns horizontally (R16.12). There is no day-at-a-time viewport and no scroll-snap. A horizontal swipe scrolls columns and never changes the visible Monday; only previous, next and Today do (R16.13, D-16). Vertical or horizontal scroll gestures never start a selection (R16.14).
 - Column width is measured with `ResizeObserver` and passed to `layoutDay` so the overflow rule adapts to the real width (R4.6).
 - Modals: `Dialog` on desktop, full-height sheet on mobile `[F]`. The footer stays above the on-screen keyboard (use dynamic viewport units and the visual viewport resize event, and scroll the focused field into view) (R16.5). Controls are at least 44 by 44 CSS pixels on mobile (R16.6). Rotation and resize keep the week, selection and form values because those live in stores and form state, not in layout (R16.4).
 
@@ -639,7 +666,7 @@ Both `date` and `weekday` stay on every slot at all times (D-13). `toEventInput(
 | Press and drag on empty space (mouse or pen) | Movement over 4 px starts a selection. Preview follows the pointer, snapped to the interval, clamped to the start day and visible range. Release opens the modal. Escape cancels (R6.4 to R6.10) |
 | Press on a block or its expanded hit area | Never starts a selection (R6.9) |
 | Touch: scroll | Normal scroll. A touch that moves before the long-press timer fires cancels the timer (R6.11) |
-| Touch: long press on empty space | After the `[F]` delay the selection starts, a non-passive `touchmove` handler prevents scrolling for the rest of the gesture, and release opens the modal |
+| Touch: long press on empty space | After the 400 ms delay `[FC-2]` the selection starts, a non-passive `touchmove` handler prevents scrolling for the rest of the gesture, and release opens the modal |
 | Touch: tap on empty space | Same as click (R6.12, `A-17`) |
 | Add Event button | Opens the modal with no prefill (R6.14) |
 | Drag a block | Nothing. Moving and resizing are out of scope (R6.13) |
@@ -679,7 +706,7 @@ Network loss during save: error shown, stored data unchanged, retry allowed (E31
 - Reduced motion: no required animation.
 
 ### 8.6 Performance design (R19)
-- Grid lines are CSS gradients and blocks are absolutely positioned, so a 5-minute, 24-hour grid is not 2016 DOM nodes (D-10).
+- Grid lines are CSS gradients and blocks are absolutely positioned, so a 15-minute, 24-hour grid is not 96 DOM nodes per column (D-10).
 - `EventBlock` is memoized on `(id, top, height, left, width, density, state, format)`. Layout is memoized per day. Hover state is local to a block.
 - The drag preview is one element moved with a transform. Pointer moves are throttled to animation frames. Only the selection store changes during a drag (R19.6).
 - Week navigation reads cached bundles first. Expansion results are keyed by `(bundleVersion, zone, window)` (R19.2).
@@ -700,7 +727,7 @@ Network loss during save: error shown, stored data unchanged, retry allowed (E31
 | Table | SELECT | INSERT / UPDATE / DELETE |
 |---|---|---|
 | `timetable_preferences` | `user_id = uid` | `user_id = uid` (insert, update). No delete. Column CHECKs plus the timezone trigger validate values |
-| `tags` | `owner_id = uid` | Tag management component |
+| `tags` | `owner_id = uid` | `owner_id = uid` for insert, update and delete (Tag Management, R22). Deleting a tag cascades to `event_tag_assignments` only (D-18) |
 | `events` | `is_event_member(id)` where member means the creator or a participant with status `accepted` | none for clients |
 | `recurrence_rules`, `event_segments`, `event_slots`, `event_exceptions` | `is_event_member(event_id)` (slots through their segment) | none for clients |
 | `event_participants` | `user_id = uid`, or `is_event_creator(event_id)` | none for clients. Accept, decline and leave use `respond_to_invitation` |
@@ -727,7 +754,7 @@ Why `events` is not readable by pending invitees: a pending invitation must not 
 
 ### 9.4 Server-side validation
 Applied in the Edge Function, repeated in the database functions where cheap:
-- **Shape:** Zod schema, body at most 64 KB, unknown fields rejected, at most 20 slots, at most 5 participant ids.
+- **Shape:** Zod schema, body at most 64 KB, unknown fields rejected, at most 20 slots, at most 4 participant ids (the creator is the fifth person, D-17).
 - **Strings:** title trimmed, 1 to 100 characters, control characters rejected. Titles are plain text. React escapes on output and nothing uses `dangerouslySetInnerHTML` (R5.14).
 - **Time:** domain `validateEventInput` (section 3.11), IANA timezone check, whole-minute times, slot end after start, no midnight crossing, no overlap within an event, repeat range at most 2 years, every slot yields at least one occurrence.
 - **Identity:** the actor is the JWT user. Client-supplied creator ids are ignored.
@@ -780,13 +807,13 @@ Every acceptance criterion maps to at least one automated test (`tech.md`). The 
 | Scope operations | Occurrence, Following and Series for edit and delete. Following from the first occurrence equals Series. Re-keying drops exceptions whose origin vanished and reports counts. Series to one-time and back |
 | Overlap layout | Touching blocks do not overlap. Identical blocks. Chain overlap uses columns correctly. 6 overlapping with narrow width gives `+N more` with the right N and order. Same input gives the same output (also as a property test over random sets) |
 | Day split | Seoul 08:00 to 10:00 viewed in UTC gives two segments labeled `23:00–01:00`. Event ending exactly at midnight stays on its day. DST day geometry |
-| Geometry | 12:20 to 13:15 at 5, 15 and 30 minute intervals gives the same time-based position. Clipping by visible range with indicator flags (R3.12 examples) |
+| Geometry | 12:20 to 13:15 at 15, 30 and 60 minute intervals gives the same time-based position and height (1 px per minute: 55 px tall). Clipping by visible range with indicator flags (R3.12 examples) |
 | Validation | Every issue code. Title at 100 and 101 characters. 20 and 21 slots. End at 24:00 accepted, start at 24:00 rejected. Overlapping and touching slots. Repeat range at 2 years and 2 years plus one day. Defaults: `2026-11-30` gives `2027-02-28`, `2026-05-31` gives `2026-08-31` |
 | Form toggle | ON, OFF, ON keeps every value. Explicit weekday not overwritten. Conversion creating duplicate weekdays is reported, not merged (R8.9) |
-| Hit-testing | Drawn rectangle beats expanded area. Press on a 5-minute block does not start a selection |
+| Hit-testing | Drawn rectangle beats expanded area. Press on a block only 5 minutes long (5 px) does not start a selection |
 
 ### 10.4 Component tests
-EventBlock density tiers (no text outside the block at every tier, full name in `aria-label`). Monochrome rule: only the indicator carries a tag color, none when untagged, no team line when absent. Editor modal: default state (one slot, Repeat off, event timezone equals display timezone), add and remove slots, last slot not removable, per-slot errors name the slots, dirty-close confirmation, read-only mode, double submit sends once. Participant selector: no search under 2 characters, at most 10 results, no email or phone rendered, sixth participant blocked. Settings: immediate apply, rollback on failed save, Reset to Defaults, invalid hours rejected.
+EventBlock density tiers (no text outside the block at every tier, full name in `aria-label`). Monochrome rule: only the indicator carries a tag color, none when untagged, no team line when absent. Editor modal: default state (one slot, Repeat off, event timezone equals display timezone), add and remove slots, last slot not removable, per-slot errors name the slots, dirty-close confirmation, read-only mode, double submit sends once. Participant selector: no search under 2 characters, at most 10 results, no email or phone rendered, fifth added friend blocked (limit 5 including the creator), counter reads "n/5". Tag selector: link to Tag Management, selector shows no tag after the selected tag is deleted. Tag Management `[P]`: create, rename, recolor, delete, duplicate name in another case rejected, events unchanged after delete. Add Event has no Calendar selector. Orange and Yellow indicators carry the 1 px `#171717` outline and other colors do not. Mobile grid: seven 140 px columns, fixed gutter, sticky header, a horizontal swipe does not change the week Settings: immediate apply, rollback on failed save, Reset to Defaults, invalid hours rejected.
 
 ### 10.5 Database and security tests (local Supabase, three or more test users)
 - **RLS:** creator, accepted participant, pending invitee, declined, friend with no invitation, unrelated user, anonymous, each against every table (matrix 9.3). A friend can search and invite but never read.
@@ -805,7 +832,7 @@ Projects: Desktop Chromium, and mobile emulation (Pixel-class Chromium and an iP
 | Edit with each scope, undo a delete, shared delete without undo | yes | yes |
 | Overlap cluster shows `+N more` and opens the list | yes | yes (narrow width) |
 | Change display timezone: same dates stay in view, events move, change back restores | yes | yes |
-| Change settings: interval 5, 15, 30, 12 or 24 hour, hours, reset, persists after reload | yes | yes |
+| Change settings: interval 15, 30, 60, 12 or 24 hour, hours, reset, persists after reload | yes | yes |
 | Keyboard-only create and edit, focus trap and return | yes | n/a |
 | Loading, empty and error states (network stubbed) | yes | yes |
 | Invitation pending: creator sees Pending, invitee's calendar does not show it, accept makes it appear | yes | n/a |
@@ -833,7 +860,7 @@ These six phases replace the three-phase table in requirements 1.5 (it was marke
 
 | Phase | Scope | Exit criteria | Needs from other specs |
 |---|---|---|---|
-| **1. Calendar UI with mock data** | Project scaffolding (Vite, TypeScript strict, Tailwind, shadcn/ui, Vitest, Playwright, lint). `src/domain/time` (civil dates, zone conversion, resolver, week range, day split), layout, header formatting. `WeeklyCalendar`, `CalendarHeader`, `DayHeader`, `TimeGutter`, `DayColumn`, `TimeSlot`, `EventBlock`, `OverflowIndicator`, `OutsideHoursIndicator`. `MockRepository` with seed data (R18.3). Navigation, intervals, 12 and 24 hour, visible hours, display timezone, loading, empty and error states | Calendar renders seeded one-time events at exact positions, overlap and overflow work, week navigation and timezone switching pass unit and component tests, desktop and mobile layouts match Figma | Figma access (blocker). Steering updates S-1 to S-7 and section 13 |
+| **1. Calendar UI with mock data** | Project scaffolding (Vite, TypeScript strict, Tailwind, shadcn/ui, Vitest, Playwright, lint). `src/domain/time` (civil dates, zone conversion, resolver, week range, day split), layout, header formatting. `WeeklyCalendar`, `CalendarHeader`, `DayHeader`, `TimeGutter`, `DayColumn`, `TimeSlot`, `EventBlock`, `OverflowIndicator`, `OutsideHoursIndicator`. `MockRepository` with seed data (R18.3). Navigation, intervals, 12 and 24 hour, visible hours, display timezone, loading, empty and error states | Calendar renders seeded one-time events at exact positions, overlap and overflow work, week navigation and timezone switching pass unit and component tests, desktop and mobile layouts match Figma | Approved Figma components only; `+N more`, outside-hours indicator and block states need their designs (section 7.5). Steering updates S-1 to S-7, S-12 to S-15 and section 13 |
 | **2. Event editor and local CRUD** | `EventEditorModal`, `EventTimeSlotInput`, `TagSelector`, `TimezoneSelect`, `TimetableSettings`, `TimeRangeSelection`, dialogs, undo. Click and drag creation, one-time events with several slots, edit and delete, validation, preferences with local persistence, Reset to Defaults | All of R6, R7 (without Repeat), R10 (creator), R12, R13 pass against the mock. The contract test suite exists | `TagDirectory` mock |
 | **3. Database persistence and authentication** | Supabase project, migrations for preferences, events, segments, one-time slots, participants (creator rows only), tag assignments, change records, RLS, helper functions, Edge Function with create, update, delete for one-time events, `SupabaseRepository`, auth wiring, `profiles` stub if needed | The contract suite passes against both repositories. RLS and constraint tests pass. Refresh keeps settings and events | **Authentication spec** (does not exist yet, section 12) |
 | **4. Recurrence and timezone handling** | `RecurrenceSettings`, recurrence expansion, exceptions, segments, scope operations, `ScopeDialog`, preview, DST policy fully applied, event timezone selection and wall-clock editing. `recurrence_rules` and `event_exceptions` migrations and functions | R8, R11, R14 pass in unit, database and e2e tests including all DST fixtures and the `TZ` matrix | Answers to OQ-36, OQ-37, OQ-39 |
@@ -851,7 +878,7 @@ Ordering notes:
 |---|---|---|---|---|
 | **Authentication** | Signed-in user, `profiles` (`id`, `username`, `display_name`) | `auth.uid()` in policies, the JWT in the Edge Function, `profiles` columns | Empty folder. **Blocks Phase 3** | None. Decision D-A: Phase 3 waits for the Authentication spec (no stub) |
 | **Friend Management** | Friend search by display name or username, friend check for invitations | `FriendDirectory.search`, `is_friend(a, b)` | Not specified | Mock directory in Phases 1 to 4. Phase 5 needs the real spec |
-| **Tag management component** | List own tags (name, `color_key`), create and edit tags | `TagDirectory.listMine`, `tags` table columns | Not specified | Mock tags until it exists. The selector never creates tags (**Provisional OQ-40a**) |
+| **Tag Management** (this spec, R22) | List, create, rename, recolor and delete own tags | `TagDirectory` (`listMine`, `create`, `update`, `remove`), `tags` table | Behavior in R22; screen not designed `[P]` | Mock tags until the screen is approved. Other features reuse the component later |
 | **Team Management and Team Scheduling** | Team name and id on events, any invitation bypass | `events.team_id`, bundle `team` field | Not specified | Always null. No bypass (R18.5) |
 | **Notifications** | Messages about invitations and changes | `event_change_records` outbox | Not specified | Records accumulate unread |
 | **Invitations screen** | Pending list, accept, decline, details | `list_my_invitations`, `respond_to_invitation` | Not specified | Test through the contract only |
@@ -870,13 +897,14 @@ Ordering notes:
 | R-5 | Deferred-commit undo loses a delete if the tab is killed | `pagehide` flush with `keepalive`. Window is short and applies to personal events only |
 | R-6 | DST policy changes after OQ-36 | Policy is in one function with a worked-example table (3.3). Only that function and its tests change |
 | R-7 | Figma contradicts assumptions such as mobile days visible, density thresholds, overflow pattern | All such values are named constants. Layout algorithms take them as parameters |
-| R-8 | 500 occurrences with 5-minute grid fails R19 targets | Measure in Phase 1 with the mock. Optimizations listed in 8.6 |
+| R-8 | 500 occurrences with a 15-minute grid over 24 hours fails R19 targets | Measure in Phase 1 with the mock. Optimizations listed in 8.6 |
 
-### 13.2 Steering changes still required (in addition to S-1 to S-7)
+### 13.2 Steering changes still required (in addition to S-1 to S-7 and S-12 to S-15 in requirements 2.3)
 - **S-8** `tech.md`: replace FullCalendar as the calendar implementation with the custom grid (D-1), or keep FullCalendar and reject this design's D-1.
 - **S-9** `tech.md`: add `luxon`, `@tanstack/react-query`, `react-hook-form`, `zod`.
 - **S-10** `tech.md` Realtime: state that this feature does not use it (D-11).
 - **S-11** `structure.md`: add `src/domain` subfolders listed in 2.2 and the `supabase/functions/<name>/deno.json` import-map convention.
+- **S-12 to S-15** (requirements 2.3): team and participant size 2 to 6 becomes 5 (`product.md`, `tech.md`, `spec-workflow.md`); grid interval 15/30/60 (`product.md`, `tech.md`); tag deletion no longer requires reassigning or untagging (`tech.md`, D-18); color rule extended to member indicators (`tech.md`, `product.md`).
 
 ### 13.3 Decisions needed from you
 1. **D-1** Custom grid instead of FullCalendar.
@@ -885,7 +913,7 @@ Ordering notes:
 4. **D-A** Decided: the Authentication spec owns `profiles` and comes before Phase 3. No stub.
 5. Adopt the proposed defaults for OQ-36 to OQ-42 as written in this design, or answer them. OQ-36, OQ-37 and OQ-39 change Phase 4.
 6. Confirm the six-phase plan replaces requirements 1.5.
-7. Provide Figma access or exports. Section 7's mapping and every `[F]` value depend on it.
+7. Approve the pending Figma designs in section 7.5 before the dependent parts are implemented.
 
 ## 14. Requirement Traceability
 
@@ -902,8 +930,9 @@ Ordering notes:
 | R13 settings | 4.3 (`timetable_preferences`), 7.3, 7.2 (TimetableSettings) |
 | R14 timezone and DST | 3.2 to 3.7, 10.2, 10.3 |
 | R15 UI states | 8.4, 8.3 |
-| R16 responsive | 8.1, 8.2 |
+| R16 responsive (R16.9 to R16.14 mobile layout) | 8.1, 8.2, D-16 |
 | R17 privacy | 9.1 to 9.3 |
+| R22 tag management | 4.3 (`tags`, `event_tag_assignments`), 5.1 (`TagDirectory`), 7.2 (TagSelector, TagManagement), 7.5, D-18 |
 | R18 interfaces and data boundary | 2.1, 5.1, 5.2, 12 |
 | R19 performance | 8.6, 10.1 |
 | R20 localization | 3.10, 3.2 (cached formatters) |
@@ -911,9 +940,10 @@ Ordering notes:
 
 ## 15. Review Checklist
 - [~] Approve or reject decisions D-1 to D-14 (section 1), especially D-1, D-3 and D-4.
-- [x] Confirm the provisional policies: OQ-36 (DST gap), OQ-37 (individual changes win), OQ-38 (limit counting, left status), OQ-39 (keep wall-clock values), OQ-40, OQ-41 (undo personal events only). **Confirmed as proposed; all defaults adopted (gate G-3).**
+- [x] Confirm the provisional policies: OQ-36 (DST gap), OQ-37 (individual changes win), OQ-38 (limit counting, left status), OQ-39 (keep wall-clock values), OQ-41 (undo personal events only). **Confirmed as proposed; all defaults adopted (gate G-3).**
 - [x] Decide D-A (`profiles` ownership) and confirm the Authentication spec comes before Phase 3. **Decided: the Authentication spec owns `profiles` and is written before Phase 3. No stub migration is added.**
 - [~] Approve the six-phase plan.
-- [~] Provide Figma access so the `[unverified]` mappings and `[F]` constants can be filled.
+- [x] Figma audited (task 1.4). Constants FC-1 to FC-9 recorded in `figma-audit.md` section 9.
+- [~] Approve the pending Figma designs (section 7.5) before implementing the dependent parts.
 - [~] Approve steering changes S-1 to S-11.
 - [~] Approve this document before I write `tasks.md`.

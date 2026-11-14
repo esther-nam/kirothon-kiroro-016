@@ -91,7 +91,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: none directly_
 
-- [ ] 1.4 Audit Figma and record design values
+- [x] 1.4 Audit Figma and record design values
   - Objective: Use the connected Figma MCP server to read the desktop calendar, mobile layout, Add and Edit Event modals, Timetable Settings, reusable components and tokens. Compare them with `requirements.md` and fill every `[F]` value.
   - Files: `.kiro/specs/personal-weekly-timetable/figma-audit.md` (new)
   - Done when: the audit lists, for each Figma frame and component, the matching React component (design 7.2), the token values (colors, type scale, spacing, radius), the `[F]` constants (row height per interval, minimum block width, density thresholds, desktop breakpoint, mobile days visible, long-press delay), the tag palette, and each discrepancy or missing state (requirements 2.2). You have reviewed it. `requirements.md` and `design.md` change only after that review.
@@ -100,7 +100,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R5.4, R5.6, R5.7, R5.9, R16.1, R16.2_
 
-- [ ] 1.5 Implement design tokens and layout constants
+- [x] 1.5 Implement design tokens and layout constants
   - Objective: Turn the audited Figma values into CSS variables, a Tailwind theme extension, named layout constants and the tag palette.
   - Files: `src/styles/tokens.css`, `tailwind.config.ts`, `src/features/timetable/constants/layout.ts`, `src/features/tags/palette.ts`
   - Done when: every value comes from `figma-audit.md`, and no component hardcodes a color, spacing or size. Each palette `color_key` maps to a token. Block backgrounds are monochrome tokens (R5.4).
