@@ -154,7 +154,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R5.2, R13.4, R13.5, R20.1, R20.2, R20.3, R20.4_
 
-- [~] 1.11 Build the app shell and AppHeader
+- [x] 1.11 Build the app shell and AppHeader
   - Objective: The page frame with the Add Event button and settings entry, and the Query and repository providers.
   - Files: `src/App.tsx`, `src/features/timetable/components/shared/AppHeader.tsx`, `src/app/providers.tsx`
   - Done when: the header matches the audited Figma frame, the Add Event and Settings buttons have accessible names, a slot for a future user menu exists, and the mock repository is provided in development and tests.
@@ -169,7 +169,7 @@ Rules for every task:
 
 ## Milestone 2 — Weekly Calendar
 
-- [~] 2.1 Implement zone conversion and the DST resolver
+- [-] 2.1 Implement zone conversion and the DST resolver
   - Objective: The single function that turns a local date and minute in a zone into an instant, and the reverse (design 3.2, 3.3). The calendar needs it for week boundaries, so it comes before recurrence.
   - Files: `src/domain/time/zone.ts`, `src/domain/time/resolve-local.ts`
   - Done when: `toLocal(instant, zone)` and `resolveLocal(date, minute, zone, context)` exist. Normal, repeated-hour (earlier instant) and gap cases are detected. A one-time gap returns `nonexistent`. A series gap returns the first valid time after the gap. Minute 1440 means 00:00 of the next date.
