@@ -295,7 +295,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R3.3, R4.3, R4.10, R4.11, R14.2, R14.3, R14.4, R14.5_
 
-- [-] 2.15 Build TimezoneSelect
+- [x] 2.15 Build TimezoneSelect
   - Objective: A searchable IANA timezone picker that shows the zone name (used in settings and the editor).
   - Files: `src/features/timetable/components/shared/TimezoneSelect.tsx`, `src/domain/time/zone-list.ts`
   - Done when: it lists IANA identifiers only and rejects any other value. It is keyboard operable and can be disabled.
@@ -304,7 +304,7 @@ Rules for every task:
   - Status: `Ready`
   - _Requirements: R7.16, R13.8_
 
-- [~] 2.16 Build TimetableSettings (local)
+- [-] 2.16 Build TimetableSettings (local)
   - Objective: Settings for interval, time format, visible start and end hours, timezone and Reset to Defaults, saved through the mock repository.
   - Files: `src/features/timetable/components/settings/TimetableSettings.tsx`, `src/features/timetable/hooks/usePreferenceMutations.ts`
   - Done when: every change applies immediately and saves the changed field without a Save button. A failed save returns to the last saved value with an error and retry. A failed load shows an error and never writes defaults. A start not earlier than the end is rejected. Reset restores the defaults. No event data changes.
